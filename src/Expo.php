@@ -7,11 +7,9 @@ use ExponentPhpSDK\ExpoRegistrar;
 
 class Expo extends ExponentPhpSDKExpo
 {
-    public $expo_url = 'hello world';
-
     /**
-     * Creates an instance of this class with the normal setup
-     * It uses the ExpoFileDriver as the repository.
+     * Creates an instance of this class with the database setup
+     * It uses the ExpoDatabaseDriver as the repository.
      *
      * @return Expo
      */
