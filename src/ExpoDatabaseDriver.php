@@ -10,10 +10,12 @@ class ExpoDatabaseDriver implements ExpoRepository
     {
         return true;
     }
+
     public function retrieve(string $key): bool
     {
         return true;
     }
+
     public function forget(string $key, string $value = null): bool
     {
         return true;

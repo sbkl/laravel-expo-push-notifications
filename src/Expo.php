@@ -2,13 +2,13 @@
 
 namespace Sbkl\LaravelExpoPushNotifications;
 
-use ExponentPhpSDK\ExpoRegistrar;
 use ExponentPhpSDK\Expo as ExponentPhpSDKExpo;
-use Sbkl\LaravelExpoPushNotifications\ExpoDatabaseDriver;
+use ExponentPhpSDK\ExpoRegistrar;
 
 class Expo extends ExponentPhpSDKExpo
 {
     public $expo_url = 'hello world';
+
     /**
      * Creates an instance of this class with the normal setup
      * It uses the ExpoFileDriver as the repository.
