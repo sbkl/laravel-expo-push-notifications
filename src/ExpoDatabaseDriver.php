@@ -20,9 +20,9 @@ class ExpoDatabaseDriver implements ExpoRepository
         return true;
     }
 
-    public function retrieve($channel)
+    public function retrieve(Channel $channel)
     {
-        return $channel->subscriptions()->pluck('token')->toArray();
+        return $channel->subscriptions->pluck('token')->toArray();
     }
 
     public function forget($channel, $token = null): bool

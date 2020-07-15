@@ -2,6 +2,7 @@
 
 namespace Sbkl\LaravelExpoPushNotifications;
 
+use Illuminate\Database\Eloquent\Collection;
 use Sbkl\LaravelExpoPushNotifications\ExpoRepository;
 use Sbkl\LaravelExpoPushNotifications\Exceptions\ExpoRegistrarException;
 
@@ -77,11 +78,11 @@ class ExpoRegistrar
      *
      * @return array
      */
-    public function getInterests(array $interests): array
+    public function getInterests(Collection $interests): array
     {
         $tokens = [];
 
-        foreach ($interests as $interest) {
+        $interests->each(function ($interest) use (&$tokens) {
             $retrieved = $this->repository->retrieve($interest);
 
             if (!is_null($retrieved)) {
@@ -97,7 +98,7 @@ class ExpoRegistrar
                     }
                 }
             }
-        }
+        });
 
         if (empty($tokens)) {
             throw ExpoRegistrarException::emptyInterests();

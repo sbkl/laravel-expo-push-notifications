@@ -23,7 +23,7 @@ class LaravelTestCase extends TestCase
 
         $this->withFactories(__DIR__ . '/../database/factories');
 
-        $this->token = 'ExponentPushToken[*******************]';
+        $this->token = 'ExponentPushToken[****************]';
     }
 
     protected function getPackageProviders($app)

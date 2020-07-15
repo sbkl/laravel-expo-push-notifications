@@ -2,6 +2,8 @@
 
 namespace Sbkl\LaravelExpoPushNotifications;
 
+use Sbkl\LaravelExpoPushNotifications\Models\Channel;
+
 interface ExpoRepository
 {
     /**
@@ -21,7 +23,7 @@ interface ExpoRepository
      *
      * @return array|string|null
      */
-    public function retrieve($channel);
+    public function retrieve(Channel $channel);
 
     /**
      * Removes an Expo token with a given identifier

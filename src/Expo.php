@@ -2,6 +2,7 @@
 
 namespace Sbkl\LaravelExpoPushNotifications;
 
+use Illuminate\Database\Eloquent\Collection;
 use Sbkl\LaravelExpoPushNotifications\Exceptions\ExpoException;
 use Sbkl\LaravelExpoPushNotifications\Exceptions\UnexpectedResponseException;
 
@@ -87,7 +88,7 @@ class Expo
      *
      * @return array|bool
      */
-    public function notify(array $interests, array $data, $debug = false)
+    public function notify(Collection $interests, array $data, $debug = false)
     {
         $postData = [];
 
