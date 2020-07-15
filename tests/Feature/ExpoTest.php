@@ -20,6 +20,7 @@ class ExpoTest extends LaravelTestCase
             'deactivated_at' => null,
         ]);
     }
+
     /** @test */
     public function it_can_subscribe_to_a_channel()
     {
@@ -34,6 +35,7 @@ class ExpoTest extends LaravelTestCase
             'token' => $token,
         ]);
     }
+
     /** @test */
     public function it_can_unsubscribe_from_a_channel()
     {
@@ -53,6 +55,7 @@ class ExpoTest extends LaravelTestCase
             'token' => $token,
         ]);
     }
+
     /** @test */
     public function it_can_send_a_notification()
     {
@@ -72,6 +75,7 @@ class ExpoTest extends LaravelTestCase
 
         $this->assertEquals('ok', $response[0]['status']);
     }
+
     /** @test */
     public function it_can_send_multiple_notifications()
     {
