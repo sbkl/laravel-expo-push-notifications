@@ -2,15 +2,17 @@
 
 namespace Sbkl\LaravelExpoPushNotifications;
 
-use ExponentPhpSDK\ExpoRepository;
+use Sbkl\LaravelExpoPushNotifications\ExpoRepository;
 use Sbkl\LaravelExpoPushNotifications\Models\Channel;
 use Sbkl\LaravelExpoPushNotifications\Models\Subscription;
 
 class ExpoDatabaseDriver implements ExpoRepository
 {
-    public function store($channel, $token): bool
+    public function store($subscriber, $channel, $token): bool
     {
         Subscription::create([
+            'subscribers_type' => get_class($subscriber),
+            'subscribers_id' => $subscriber->id,
             'channel_id' => $channel->id,
             'token' => $token,
         ]);
@@ -18,17 +20,13 @@ class ExpoDatabaseDriver implements ExpoRepository
         return true;
     }
 
-    public function retrieve($channelId)
+    public function retrieve($channel)
     {
-        $channel = Channel::find($channelId);
-
         return $channel->subscriptions()->pluck('token')->toArray();
     }
 
-    public function forget($channelId, $token = null): bool
+    public function forget($channel, $token = null): bool
     {
-        $channel = Channel::find($channelId);
-
         if ($token) {
             $subscription = $channel->subscriptions()->where('token', $token)->first();
             $subscription->delete();

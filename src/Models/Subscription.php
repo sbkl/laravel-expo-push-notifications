@@ -14,4 +14,9 @@ class Subscription extends Model
     {
         return $this->belongsTo(Channel::class);
     }
+
+    public function subscribers()
+    {
+        return $this->morphTo();
+    }
 }

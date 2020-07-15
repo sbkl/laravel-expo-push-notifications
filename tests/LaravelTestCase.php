@@ -9,15 +9,21 @@ use Sbkl\LaravelExpoPushNotifications\Facades\Expo;
 
 class LaravelTestCase extends TestCase
 {
+    public $token;
+
     use RefreshDatabase;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->loadLaravelMigrations();
+
         $this->artisan('migrate');
 
         $this->withFactories(__DIR__ . '/../database/factories');
+
+        $this->token = 'ExponentPushToken[*******************]';
     }
 
     protected function getPackageProviders($app)
