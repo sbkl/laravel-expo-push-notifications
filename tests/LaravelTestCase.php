@@ -2,10 +2,10 @@
 
 namespace Sbkl\LaravelExpoPushNotifications\Tests;
 
-use Orchestra\Testbench\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Sbkl\LaravelExpoPushNotifications\Facades\Expo;
+use Orchestra\Testbench\TestCase;
 use Sbkl\LaravelExpoPushNotifications\ExpoServiceProvider;
+use Sbkl\LaravelExpoPushNotifications\Facades\Expo;
 
 class LaravelTestCase extends TestCase
 {
@@ -16,8 +16,6 @@ class LaravelTestCase extends TestCase
         parent::setUp();
 
         $this->artisan('migrate');
-
-        // $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
 
         $this->withFactories(__DIR__ . '/../database/factories');
     }

@@ -13,7 +13,7 @@ class ExpoTest extends LaravelTestCase
     {
         $channelName = 'Test';
         Channel::create([
-            'name' => $channelName
+            'name' => $channelName,
         ]);
         $this->assertDatabaseHas('expo_channels', [
             'name' => $channelName,
@@ -26,7 +26,7 @@ class ExpoTest extends LaravelTestCase
         $channelName = 'Test';
         $token = 'ExponentPushToken[1111111111111111111]';
         $channel = Channel::create([
-            'name' => $channelName
+            'name' => $channelName,
         ]);
         Expo::subscribe($channel, $token);
         $this->assertDatabaseHas('expo_subscriptions', [
@@ -40,7 +40,7 @@ class ExpoTest extends LaravelTestCase
         $channelName = 'Test';
         $token = 'ExponentPushToken[1111111111111111111]';
         $channel = Channel::create([
-            'name' => $channelName
+            'name' => $channelName,
         ]);
         Expo::subscribe($channel, $token);
         $this->assertDatabaseHas('expo_subscriptions', [
@@ -59,13 +59,13 @@ class ExpoTest extends LaravelTestCase
         $channelName = 'Test';
         $token = 'ExponentPushToken[EMUuS2PAx9QpD1e6E9p38f]';
         $channel = Channel::create([
-            'name' => $channelName
+            'name' => $channelName,
         ]);
         Expo::subscribe($channel, $token);
 
         $notification = [
             'title' => 'Laravel Push Notifications',
-            'body' => 'This is coming from the package'
+            'body' => 'This is coming from the package',
         ];
 
         $response = Expo::notify([$channel->id], $notification);
@@ -78,14 +78,14 @@ class ExpoTest extends LaravelTestCase
         $channelName = 'Test';
         $token = 'ExponentPushToken[EMUuS2PAx9QpD1e6E9p38f]';
         $channel = Channel::create([
-            'name' => $channelName
+            'name' => $channelName,
         ]);
         Expo::subscribe($channel, $token);
         Expo::subscribe($channel, $token);
 
         $notification = [
             'title' => 'Laravel Push Notifications Multiple',
-            'body' => 'This is coming from the package'
+            'body' => 'This is coming from the package',
         ];
 
         $response = Expo::notify([$channel->id], $notification);
