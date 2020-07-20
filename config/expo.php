@@ -1,5 +1,7 @@
 <?php
 
+use Sbkl\LaravelExpoPushNotifications\Models\User;
+
 return [
 
     /*

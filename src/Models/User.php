@@ -1,15 +1,13 @@
 <?php
 
-namespace App;
+namespace Sbkl\LaravelExpoPushNotifications\Models;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Sbkl\LaravelExpoPushNotifications\Traits\Subscribeable;
+use Sbkl\LaravelExpoPushNotifications\Traits\Expoable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use Notifiable, Subscribeable;
+    use Expoable;
 
     /**
      * The attributes that are mass assignable.

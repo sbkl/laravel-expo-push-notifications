@@ -23,4 +23,9 @@ class ExpoException extends \Exception
 
         return new static($message);
     }
+
+    public static function emptyNotification()
+    {
+        return new static('A notification must have a title or a body attribute.');
+    }
 }

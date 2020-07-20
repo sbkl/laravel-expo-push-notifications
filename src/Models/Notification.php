@@ -1,0 +1,101 @@
+<?php
+
+namespace Sbkl\LaravelExpoPushNotifications\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Notification extends Model
+{
+    /**
+     * The "type" of the primary key ID.
+     *
+     * @var string
+     */
+    protected $keyType = 'string';
+
+    /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = false;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'expo_notifications';
+
+    /**
+     * The guarded attributes on the model.
+     *
+     * @var array
+     */
+    protected $guarded = [];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'data' => 'array',
+        'read_at' => 'datetime',
+    ];
+
+    /**
+     * Get the recipient entities that the notification has.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+
+    public function recipients()
+    {
+        return $this->belongsToMany(User::class, 'expo_notification_user', 'expo_notification_id', 'user_id')->withPivot('read_at');
+    }
+
+    /**
+     * Mark the notification as read.
+     *
+     * @return void
+     */
+    public function markAsRead($recipientId)
+    {
+        $this->recipients()->updateExistingPivot($recipientId, [
+            'read_at' => now()
+        ]);
+    }
+
+    /**
+     * Mark the notification as unread.
+     *
+     * @return void
+     */
+    public function markAsUnread($recipientId)
+    {
+        $this->recipients()->updateExistingPivot($recipientId, [
+            'read_at' => null
+        ]);
+    }
+
+    /**
+     * Determine if a notification has been read.
+     *
+     * @return bool
+     */
+    public function read($recipientId)
+    {
+        return $this->recipients()->where('id', $recipientId)->first()->pivot->read_at !== null;
+    }
+
+    /**
+     * Determine if a notification has not been read.
+     *
+     * @return bool
+     */
+    public function unread($recipientId)
+    {
+        return $this->recipients()->where('id', $recipientId)->first()->pivot->read_at === null;
+    }
+}

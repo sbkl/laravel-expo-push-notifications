@@ -2,7 +2,9 @@
 
 namespace Sbkl\LaravelExpoPushNotifications;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Collection;
+use Sbkl\LaravelExpoPushNotifications\Models\Notification;
 use Sbkl\LaravelExpoPushNotifications\Exceptions\ExpoException;
 use Sbkl\LaravelExpoPushNotifications\Exceptions\UnexpectedResponseException;
 
@@ -56,11 +58,13 @@ class Expo
      * @param $interest
      * @param $token
      *
-     * @return string
+     * @return Sbkl\LaravelExpoPushNotifications\Models\Subscription
      */
     public function subscribe($subscriber, $channel, $token)
     {
-        return $this->registrar->registerInterest($subscriber, $channel, $token);
+        $subscription = $this->registrar->registerInterest($subscriber, $channel, $token);
+        
+        return $subscription;
     }
 
     /**
@@ -88,19 +92,30 @@ class Expo
      *
      * @return array|bool
      */
-    public function notify(Collection $interests, array $data, $debug = false)
+    public function notify(Collection $channels, array $notification, $debug = false)
     {
         $postData = [];
 
-        if (count($interests) == 0) {
-            throw new ExpoException('Interests array must not be empty.');
+        if (count($channels) == 0) {
+            throw new ExpoException('Channels array must not be empty.');
         }
 
-        // Gets the expo tokens for the interests
-        $recipients = $this->registrar->getInterests($interests);
+        if (!isset($notification['title']) && !isset($notification['body'])) {
+            throw ExpoException::emptyNotification();
+        }
 
-        foreach ($recipients as $token) {
-            $postData[] = $data + ['to' => $token];
+        // Gets the expo tokens and recipients
+        [$tokens, $recipientIds] = $this->registrar->getInterests($channels);
+
+        // Create the notification
+        $databaseNotification = Notification::create(array_merge([
+            'id' => Str::uuid()->toString(),
+        ], isset($notification['title']) ? ['title' => $notification['title']] : [], isset($notification['body']) ? ['body' => $notification['body']] : [], isset($notification['data']) ? ['data' => json_decode($notification['data'])] : []));
+
+        $databaseNotification->recipients()->attach($recipientIds);
+
+        foreach ($tokens as $token) {
+            $postData[] = $notification + ['to' => $token];
         }
 
         $ch = $this->prepareCurl();
@@ -110,7 +125,7 @@ class Expo
         $response = $this->executeCurl($ch);
 
         // If the notification failed completely, throw an exception with the details
-        if ($debug && $this->failedCompletely($response, $recipients)) {
+        if ($debug && $this->failedCompletely($response, $tokens)) {
             throw ExpoException::failedCompletelyException($response);
         }
 

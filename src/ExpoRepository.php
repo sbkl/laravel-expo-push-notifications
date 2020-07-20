@@ -14,14 +14,14 @@ interface ExpoRepository
      *
      * @return bool
      */
-    public function store($user, $channel, $token): bool;
+    public function store($user, $channel, $token);
 
     /**
      * Retrieve an Expo token with a given identifier
      *
      * @param string $key
      *
-     * @return array|string|null
+     * @return Illuminate\Database\Eloquent\Collection
      */
     public function retrieve(Channel $channel);
 

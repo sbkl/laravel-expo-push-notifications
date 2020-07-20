@@ -18,7 +18,8 @@ class ExpoServiceProvider extends ServiceProvider
             if (!class_exists('CreateExpoChannelsTable') && !class_exists('CreateExpoSubscriptionsTable')) {
                 $this->publishes([
                     __DIR__ . '/../database/migrations/create_expo_channels_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_expo_channels_table.php'),
-                    __DIR__ . '/../database/migrations/create_expo_subscriptions_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_expo_subscriptions_table.php')
+                    __DIR__ . '/../database/migrations/create_expo_subscriptions_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_expo_subscriptions_table.php'),
+                    __DIR__ . '/../database/migrations/create_expo_notifications_table.php.stub' => database_path('migrations/' . date('Y_m_d_His', time()) . '_create_expo_notifications_table.php'),
                 ], 'migrations');
             }
         }

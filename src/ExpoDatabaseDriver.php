@@ -8,21 +8,19 @@ use Sbkl\LaravelExpoPushNotifications\Models\Subscription;
 
 class ExpoDatabaseDriver implements ExpoRepository
 {
-    public function store($subscriber, $channel, $token): bool
+    public function store($subscriber, $channel, $token)
     {
-        Subscription::create([
-            'subscribers_type' => get_class($subscriber),
-            'subscribers_id' => $subscriber->id,
-            'channel_id' => $channel->id,
+        return Subscription::create([
+            'user_id' => (string) $subscriber->id,
+            'channel_id' => (string) $channel->id,
             'token' => $token,
+            'deactivated_at' => null
         ]);
-
-        return true;
     }
 
     public function retrieve(Channel $channel)
     {
-        return $channel->subscriptions->pluck('token')->toArray();
+        return $channel->subscriptions()->select(['user_id', 'token'])->get();
     }
 
     public function forget($channel, $token = null): bool

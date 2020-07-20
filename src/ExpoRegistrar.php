@@ -33,7 +33,7 @@ class ExpoRegistrar
      *
      * @throws ExpoRegistrarException
      *
-     * @return string
+     * @return Sbkl\LaravelExpoPushNotifications\Models\Subscription
      */
     public function registerInterest($user, $channel, $token)
     {
@@ -41,13 +41,13 @@ class ExpoRegistrar
             throw ExpoRegistrarException::invalidToken();
         }
 
-        $stored = $this->repository->store($user, $channel, $token);
+        $subscription = $this->repository->store($user, $channel, $token);
 
-        if (!$stored) {
+        if (!$subscription) {
             throw ExpoRegistrarException::couldNotRegisterInterest();
         }
 
-        return $token;
+        return $subscription;
     }
 
     /**
@@ -78,33 +78,33 @@ class ExpoRegistrar
      *
      * @return array
      */
-    public function getInterests(Collection $interests): array
+    public function getInterests(Collection $channels): array
     {
         $tokens = [];
 
-        $interests->each(function ($interest) use (&$tokens) {
-            $retrieved = $this->repository->retrieve($interest);
+        $recipientIds = [];
 
-            if (!is_null($retrieved)) {
-                if (is_string($retrieved)) {
-                    $tokens[] = $retrieved;
-                }
+        $channels->each(function ($channel) use (&$tokens, &$recipientIds) {
 
-                if (is_array($retrieved)) {
-                    foreach ($retrieved as $token) {
-                        if (is_string($token)) {
-                            $tokens[] = $token;
-                        }
-                    }
+            $subscriptions = $this->repository->retrieve($channel);
+            
+            $subscriptions->each(function ($subscription) use (&$tokens, &$recipientIds) {
+
+                if (is_string($subscription->token)) {
+
+                    $tokens[] = $subscription->token;
+                    
+                    $recipientIds[] = $subscription->user_id;
                 }
-            }
+            });
         });
 
         if (empty($tokens)) {
+
             throw ExpoRegistrarException::emptyInterests();
         }
 
-        return $tokens;
+        return [collect($tokens)->unique()->toArray(), collect($recipientIds)->unique()->toArray()];
     }
 
     /**

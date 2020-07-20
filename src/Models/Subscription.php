@@ -10,13 +10,23 @@ class Subscription extends Model
 
     protected $table = 'expo_subscriptions';
 
+    /**
+     * Get the notification entities that the users has.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */    
     public function channel()
     {
         return $this->belongsTo(Channel::class);
     }
 
-    public function subscribers()
+    /**
+     * Get the notification entities that the users has.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */     
+    public function subscriber()
     {
-        return $this->morphTo();
+        return $this->belongsTo(User::class);
     }
 }

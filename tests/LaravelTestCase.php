@@ -23,7 +23,7 @@ class LaravelTestCase extends TestCase
 
         $this->withFactories(__DIR__ . '/../database/factories');
 
-        $this->token = 'ExponentPushToken[****************]';
+        $this->token = 'ExponentPushToken[123456789]';
     }
 
     protected function getPackageProviders($app)
@@ -44,7 +44,9 @@ class LaravelTestCase extends TestCase
     {
         include_once __DIR__ . '/../database/migrations/create_expo_channels_table.php.stub';
         include_once __DIR__ . '/../database/migrations/create_expo_subscriptions_table.php.stub';
+        include_once __DIR__ . '/../database/migrations/create_expo_notifications_table.php.stub';
         (new \CreateExpoChannelsTable)->up();
         (new \CreateExpoSubscriptionsTable)->up();
+        (new \CreateExpoNotificationsTable)->up();
     }
 }
