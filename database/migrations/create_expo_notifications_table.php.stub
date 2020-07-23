@@ -16,15 +16,15 @@ class CreateExpoNotificationsTable extends Migration
         Schema::create('expo_notifications', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('type')->nullable();
+            $table->nullableMorphs('model');
             $table->string('title')->nullable();
-            $table->string('body')->nullable();
+            $table->text('body')->nullable();
             $table->text('data')->nullable();
             $table->timestamps();
         });
 
         Schema::create('expo_notification_user', function (Blueprint $table) {
-            $table->unsignedBigInteger('expo_notification_id');
-            $table->foreign('expo_notification_id')->references('id')->on('expo_notifications')->onDelete('cascade');
+            $table->string('expo_notification_id');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamp('read_at')->nullable();
@@ -39,6 +39,7 @@ class CreateExpoNotificationsTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('expo_notification_user');
         Schema::dropIfExists('expo_notifications');
     }
 }

@@ -52,7 +52,18 @@ class Notification extends Model
 
     public function recipients()
     {
-        return $this->belongsToMany(User::class, 'expo_notification_user', 'expo_notification_id', 'user_id')->withPivot('read_at');
+        return $this->belongsToMany(User::class, 'expo_notification_user', 'expo_notification_id', 'user_id')->withPivot('read_at')->withTimestamps();
+    }
+
+    /**
+     * Get the model entity related to the notification.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
+
+    public function model()
+    {
+        return $this->morphTo();
     }
 
     /**

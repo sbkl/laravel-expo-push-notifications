@@ -3,6 +3,7 @@
 namespace Sbkl\LaravelExpoPushNotifications;
 
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 use Sbkl\LaravelExpoPushNotifications\Models\Notification;
 use Sbkl\LaravelExpoPushNotifications\Exceptions\ExpoException;
@@ -63,7 +64,7 @@ class Expo
     public function subscribe($subscriber, $channel, $token)
     {
         $subscription = $this->registrar->registerInterest($subscriber, $channel, $token);
-        
+
         return $subscription;
     }
 
@@ -104,13 +105,22 @@ class Expo
             throw ExpoException::emptyNotification();
         }
 
+        if (isset($notification['model']) && !$notification['model'] instanceof Model) {
+            throw ExpoException::wrongModelInstance();
+        }
+
         // Gets the expo tokens and recipients
         [$tokens, $recipientIds] = $this->registrar->getInterests($channels);
 
         // Create the notification
-        $databaseNotification = Notification::create(array_merge([
-            'id' => Str::uuid()->toString(),
-        ], isset($notification['title']) ? ['title' => $notification['title']] : [], isset($notification['body']) ? ['body' => $notification['body']] : [], isset($notification['data']) ? ['data' => json_decode($notification['data'])] : []));
+        $databaseNotification = Notification::create(array_merge(
+            isset($notification['id']) ? ['id' => $notification['id']] : ['id' => Str::uuid()->toString()],
+            isset($notification['model']) ? ['model_type' => get_class($notification['model'])] : [],
+            isset($notification['model']) ? ['model_id' => $notification['model']->id] : [],
+            isset($notification['title']) ? ['title' => $notification['title']] : [],
+            isset($notification['body']) ? ['body' => $notification['body']] : [],
+            isset($notification['data']) ? ['data' => json_decode($notification['data'])] : [],
+        ));
 
         $databaseNotification->recipients()->attach($recipientIds);
 

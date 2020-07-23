@@ -28,4 +28,9 @@ class ExpoException extends \Exception
     {
         return new static('A notification must have a title or a body attribute.');
     }
+
+    public static function wrongModelInstance()
+    {
+        return new static('model attribute must be an instance of Illuminate\Database\Eloquent\Model');
+    }
 }
