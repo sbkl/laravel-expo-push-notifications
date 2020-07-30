@@ -61,7 +61,7 @@ class Expo
      *
      * @return Sbkl\LaravelExpoPushNotifications\Models\Subscription
      */
-    public function subscribe($subscriber, $channel, $token)
+    public function subscribe($subscriber, $channel, $token = null)
     {
         $subscription = $this->registrar->registerInterest($subscriber, $channel, $token);
 

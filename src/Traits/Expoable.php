@@ -28,7 +28,7 @@ trait Expoable
         return $this->belongsToMany(Notification::class, 'expo_notification_user', 'user_id', 'expo_notification_id')->withPivot('read_at')->withTimestamps();
     }
 
-    public function subscribe($channel, $token)
+    public function subscribe($channel, $token = null)
     {
         return Expo::subscribe($this, $channel, $token);
     }

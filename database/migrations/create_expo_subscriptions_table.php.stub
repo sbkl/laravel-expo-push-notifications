@@ -19,7 +19,7 @@ class CreateExpoSubscriptionsTable extends Migration
             $table->foreign('channel_id')->references('id')->on('expo_channels')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('token');
+            $table->string('token')->nullable();
             $table->timestamp('deactivated_at')->nullable();
             $table->timestamps();
         });

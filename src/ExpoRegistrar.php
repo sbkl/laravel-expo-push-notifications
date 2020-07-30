@@ -37,7 +37,7 @@ class ExpoRegistrar
      */
     public function registerInterest($user, $channel, $token)
     {
-        if (!$this->isValidExpoPushToken($token)) {
+        if ($token && !$this->isValidExpoPushToken($token)) {
             throw ExpoRegistrarException::invalidToken();
         }
 
@@ -87,13 +87,13 @@ class ExpoRegistrar
         $channels->each(function ($channel) use (&$tokens, &$recipientIds) {
 
             $subscriptions = $this->repository->retrieve($channel);
-            
+
             $subscriptions->each(function ($subscription) use (&$tokens, &$recipientIds) {
 
                 if (is_string($subscription->token)) {
 
                     $tokens[] = $subscription->token;
-                    
+
                     $recipientIds[] = $subscription->user_id;
                 }
             });
