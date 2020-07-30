@@ -90,11 +90,11 @@ class ExpoRegistrar
 
             $subscriptions->each(function ($subscription) use (&$tokens, &$recipientIds) {
 
+                $recipientIds[] = $subscription->user_id;
+
                 if (is_string($subscription->token)) {
 
                     $tokens[] = $subscription->token;
-
-                    $recipientIds[] = $subscription->user_id;
                 }
             });
         });
