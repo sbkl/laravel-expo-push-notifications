@@ -124,22 +124,24 @@ class Expo
 
         $databaseNotification->recipients()->attach($recipientIds);
 
-        foreach ($tokens as $token) {
-            $postData[] = $notification + ['to' => $token];
+        if (!empty($tokens)) {
+            foreach ($tokens as $token) {
+                $postData[] = $notification + ['to' => $token];
+            }
+
+            $ch = $this->prepareCurl();
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+
+            $response = $this->executeCurl($ch);
+
+            // If the notification failed completely, throw an exception with the details
+            if ($debug && $this->failedCompletely($response, $tokens)) {
+                throw ExpoException::failedCompletelyException($response);
+            }
+
+            return $response;
         }
-
-        $ch = $this->prepareCurl();
-
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
-
-        $response = $this->executeCurl($ch);
-
-        // If the notification failed completely, throw an exception with the details
-        if ($debug && $this->failedCompletely($response, $tokens)) {
-            throw ExpoException::failedCompletelyException($response);
-        }
-
-        return $response;
     }
 
     /**

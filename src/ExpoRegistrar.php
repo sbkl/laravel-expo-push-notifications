@@ -99,7 +99,7 @@ class ExpoRegistrar
             });
         });
 
-        if (empty($tokens)) {
+        if (empty($tokens) && empty($recipientIds)) {
 
             throw ExpoRegistrarException::emptyInterests();
         }
