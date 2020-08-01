@@ -112,15 +112,34 @@ class Expo
         // Gets the expo tokens and recipients
         [$tokens, $recipientIds] = $this->registrar->getInterests($channels);
 
-        // Create the notification
-        $databaseNotification = Notification::create(array_merge(
-            isset($notification['id']) ? ['id' => $notification['id']] : ['id' => Str::uuid()->toString()],
-            isset($notification['model']) ? ['model_type' => get_class($notification['model'])] : [],
-            isset($notification['model']) ? ['model_id' => $notification['model']->id] : [],
-            isset($notification['title']) ? ['title' => $notification['title']] : [],
-            isset($notification['body']) ? ['body' => $notification['body']] : [],
-            isset($notification['data']) ? ['data' => json_decode($notification['data'])] : [],
-        ));
+        $databaseNotification = null;
+
+        if (isset($notification['id'])) {
+            $existingNotification = Notification::find($notification['id']);
+            if (!$existingNotification) {
+                // Create the notification
+                $databaseNotification = Notification::create(array_merge(
+                    ['id' => $notification['id']],
+                    isset($notification['model']) ? ['model_type' => get_class($notification['model'])] : [],
+                    isset($notification['model']) ? ['model_id' => $notification['model']->id] : [],
+                    isset($notification['title']) ? ['title' => $notification['title']] : [],
+                    isset($notification['body']) ? ['body' => $notification['body']] : [],
+                    isset($notification['data']) ? ['data' => json_decode($notification['data'])] : [],
+                ));
+            } else {
+                $databaseNotification = $existingNotification;
+            }
+        } else {
+            // Create the notification
+            $databaseNotification = Notification::create(array_merge(
+                ['id' => Str::uuid()->toString()],
+                isset($notification['model']) ? ['model_type' => get_class($notification['model'])] : [],
+                isset($notification['model']) ? ['model_id' => $notification['model']->id] : [],
+                isset($notification['title']) ? ['title' => $notification['title']] : [],
+                isset($notification['body']) ? ['body' => $notification['body']] : [],
+                isset($notification['data']) ? ['data' => json_decode($notification['data'])] : [],
+            ));
+        }
 
         $databaseNotification->recipients()->attach($recipientIds);
 
