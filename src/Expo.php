@@ -126,9 +126,9 @@ class Expo
             // Gets the expo tokens and recipients
             [$tokens, $recipientIds] = $this->registrar->getInterests($channels);
 
-            $existingRecipients = $databaseNotification->recipients()->whereIn('user_id', $recipientIds)->pluck('user_id');
+            $existingRecipients = $databaseNotification->fresh()->recipients()->whereIn('user_id', $recipientIds)->pluck('user_id');
 
-            $databaseNotification->recipients()->attach(collect($recipientIds)->diff($existingRecipients));
+            $databaseNotification->fresh()->recipients()->attach(collect($recipientIds)->diff($existingRecipients));
 
             if (!empty($tokens)) {
                 foreach ($tokens as $token) {
