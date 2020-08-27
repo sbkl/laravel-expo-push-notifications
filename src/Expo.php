@@ -4,7 +4,7 @@ namespace Sbkl\LaravelExpoPushNotifications;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Collection;
+use Sbkl\LaravelExpoPushNotifications\Models\Channel;
 use Sbkl\LaravelExpoPushNotifications\Models\Notification;
 use Sbkl\LaravelExpoPushNotifications\Exceptions\ExpoException;
 use Sbkl\LaravelExpoPushNotifications\Exceptions\UnexpectedResponseException;
@@ -93,11 +93,9 @@ class Expo
      *
      * @return array|bool
      */
-    public function notify(Collection $channels, array $notification, $debug = false)
+    public function notify(array $channelNames, array $notification, $debug = false)
     {
-        $postData = [];
-
-        if (count($channels) == 0) {
+        if (count($channelNames) == 0) {
             throw new ExpoException('Channels array must not be empty.');
         }
 
@@ -109,58 +107,44 @@ class Expo
             throw ExpoException::wrongModelInstance();
         }
 
-        // Gets the expo tokens and recipients
-        [$tokens, $recipientIds] = $this->registrar->getInterests($channels);
+        // Create the notification
+        $databaseNotification = Notification::create(array_merge(
+            ['id' => Str::uuid()->toString()],
+            isset($notification['model']) ? ['model_type' => get_class($notification['model'])] : [],
+            isset($notification['model']) ? ['model_id' => $notification['model']->id] : [],
+            isset($notification['title']) ? ['title' => $notification['title']] : [],
+            isset($notification['body']) ? ['body' => $notification['body']] : [],
+            isset($notification['data']) ? ['data' => json_decode($notification['data'])] : [],
+        ));
 
-        $databaseNotification = null;
+        Channel::whereIn('name', $channelNames)->whereHas('subscriptions')->chunk(1, function ($channels) use ($databaseNotification, $notification, $debug) {
 
-        if (isset($notification['id'])) {
-            $existingNotification = Notification::find($notification['id']);
-            if (!$existingNotification) {
-                // Create the notification
-                $databaseNotification = Notification::create(array_merge(
-                    ['id' => $notification['id']],
-                    isset($notification['model']) ? ['model_type' => get_class($notification['model'])] : [],
-                    isset($notification['model']) ? ['model_id' => $notification['model']->id] : [],
-                    isset($notification['title']) ? ['title' => $notification['title']] : [],
-                    isset($notification['body']) ? ['body' => $notification['body']] : [],
-                    isset($notification['data']) ? ['data' => json_decode($notification['data'])] : [],
-                ));
-            } else {
-                $databaseNotification = $existingNotification;
+            $postData = [];
+
+            // Gets the expo tokens and recipients
+            [$tokens, $recipientIds] = $this->registrar->getInterests($channels);
+
+            $databaseNotification->recipients()->attach($recipientIds);
+
+            if (!empty($tokens)) {
+                foreach ($tokens as $token) {
+                    $postData[] = $notification + ['to' => $token];
+                }
+
+                $ch = $this->prepareCurl();
+
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+
+                $response = $this->executeCurl($ch);
+
+                // If the notification failed completely, throw an exception with the details
+                if ($debug && $this->failedCompletely($response, $tokens)) {
+                    throw ExpoException::failedCompletelyException($response);
+                }
+
+                return $response;
             }
-        } else {
-            // Create the notification
-            $databaseNotification = Notification::create(array_merge(
-                ['id' => Str::uuid()->toString()],
-                isset($notification['model']) ? ['model_type' => get_class($notification['model'])] : [],
-                isset($notification['model']) ? ['model_id' => $notification['model']->id] : [],
-                isset($notification['title']) ? ['title' => $notification['title']] : [],
-                isset($notification['body']) ? ['body' => $notification['body']] : [],
-                isset($notification['data']) ? ['data' => json_decode($notification['data'])] : [],
-            ));
-        }
-
-        $databaseNotification->recipients()->attach($recipientIds);
-
-        if (!empty($tokens)) {
-            foreach ($tokens as $token) {
-                $postData[] = $notification + ['to' => $token];
-            }
-
-            $ch = $this->prepareCurl();
-
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
-
-            $response = $this->executeCurl($ch);
-
-            // If the notification failed completely, throw an exception with the details
-            if ($debug && $this->failedCompletely($response, $tokens)) {
-                throw ExpoException::failedCompletelyException($response);
-            }
-
-            return $response;
-        }
+        });
     }
 
     /**
