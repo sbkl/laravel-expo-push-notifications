@@ -2,7 +2,7 @@
 
 namespace Sbkl\LaravelExpoPushNotifications\Exceptions;
 
-use \Exception;
+use Exception;
 
 class UnexpectedResponseException extends Exception
 {

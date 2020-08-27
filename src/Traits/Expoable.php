@@ -41,14 +41,14 @@ trait Expoable
     public function markNotificationAsRead($notificationId)
     {
         $this->expoNotifications()->updateExistingPivot($notificationId, [
-            'read_at' => now()
+            'read_at' => now(),
         ]);
     }
 
     public function markNotificationAsUnread($notificationId)
     {
         $this->expoNotifications()->updateExistingPivot($notificationId, [
-            'read_at' => null
+            'read_at' => null,
         ]);
     }
 

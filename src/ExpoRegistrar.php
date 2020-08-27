@@ -3,13 +3,12 @@
 namespace Sbkl\LaravelExpoPushNotifications;
 
 use Illuminate\Database\Eloquent\Collection;
-use Sbkl\LaravelExpoPushNotifications\ExpoRepository;
 use Sbkl\LaravelExpoPushNotifications\Exceptions\ExpoRegistrarException;
 
 class ExpoRegistrar
 {
     /**
-     * Repository that manages the storage and retrieval
+     * Repository that manages the storage and retrieval.
      *
      * @var ExpoRepository
      */
@@ -26,7 +25,7 @@ class ExpoRegistrar
     }
 
     /**
-     * Registers the given token for the given interest
+     * Registers the given token for the given interest.
      *
      * @param $interest
      * @param $token
@@ -37,13 +36,13 @@ class ExpoRegistrar
      */
     public function registerInterest($user, $channel, $token)
     {
-        if ($token && !$this->isValidExpoPushToken($token)) {
+        if ($token && ! $this->isValidExpoPushToken($token)) {
             throw ExpoRegistrarException::invalidToken();
         }
 
         $subscription = $this->repository->store($user, $channel, $token);
 
-        if (!$subscription) {
+        if (! $subscription) {
             throw ExpoRegistrarException::couldNotRegisterInterest();
         }
 
@@ -51,7 +50,7 @@ class ExpoRegistrar
     }
 
     /**
-     * Removes token of a given interest
+     * Removes token of a given interest.
      *
      * @param $interest
      * @param $token
@@ -62,7 +61,7 @@ class ExpoRegistrar
      */
     public function removeInterest($interest, $token = null)
     {
-        if (!$this->repository->forget($interest, $token)) {
+        if (! $this->repository->forget($interest, $token)) {
             throw ExpoRegistrarException::couldNotRemoveInterest();
         }
 
@@ -70,7 +69,7 @@ class ExpoRegistrar
     }
 
     /**
-     * Gets the tokens of the interests
+     * Gets the tokens of the interests.
      *
      * @param array $interests
      *
@@ -85,22 +84,18 @@ class ExpoRegistrar
         $recipientIds = [];
 
         $channels->each(function ($channel) use (&$tokens, &$recipientIds) {
-
             $subscriptions = $this->repository->retrieve($channel);
 
             $subscriptions->each(function ($subscription) use (&$tokens, &$recipientIds) {
-
                 $recipientIds[] = $subscription->user_id;
 
                 if (is_string($subscription->token)) {
-
                     $tokens[] = $subscription->token;
                 }
             });
         });
 
         if (empty($tokens) && empty($recipientIds)) {
-
             throw ExpoRegistrarException::emptyInterests();
         }
 
@@ -108,7 +103,7 @@ class ExpoRegistrar
     }
 
     /**
-     * Determines if a token is a valid Expo push token
+     * Determines if a token is a valid Expo push token.
      *
      * @param string $token
      *
@@ -116,6 +111,6 @@ class ExpoRegistrar
      */
     private function isValidExpoPushToken(string $token)
     {
-        return  substr($token, 0, 18) ===  "ExponentPushToken[" && substr($token, -1) === ']';
+        return  substr($token, 0, 18) === 'ExponentPushToken[' && substr($token, -1) === ']';
     }
 }

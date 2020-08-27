@@ -21,7 +21,7 @@ class LaravelTestCase extends TestCase
 
         $this->artisan('migrate');
 
-        $this->withFactories(__DIR__ . '/../database/factories');
+        $this->withFactories(__DIR__.'/../database/factories');
 
         $this->token = 'ExponentPushToken[BFpQPZNYMgBPvWelPNGIbG]';
     }
@@ -42,9 +42,9 @@ class LaravelTestCase extends TestCase
 
     protected function getEnvironmentSetUp($app)
     {
-        include_once __DIR__ . '/../database/migrations/create_expo_channels_table.php.stub';
-        include_once __DIR__ . '/../database/migrations/create_expo_subscriptions_table.php.stub';
-        include_once __DIR__ . '/../database/migrations/create_expo_notifications_table.php.stub';
+        include_once __DIR__.'/../database/migrations/create_expo_channels_table.php.stub';
+        include_once __DIR__.'/../database/migrations/create_expo_subscriptions_table.php.stub';
+        include_once __DIR__.'/../database/migrations/create_expo_notifications_table.php.stub';
         (new \CreateExpoChannelsTable)->up();
         (new \CreateExpoSubscriptionsTable)->up();
         (new \CreateExpoNotificationsTable)->up();

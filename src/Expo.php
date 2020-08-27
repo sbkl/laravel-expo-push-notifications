@@ -2,29 +2,29 @@
 
 namespace Sbkl\LaravelExpoPushNotifications;
 
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
-use Sbkl\LaravelExpoPushNotifications\Models\Channel;
-use Sbkl\LaravelExpoPushNotifications\Models\Notification;
+use Illuminate\Support\Str;
 use Sbkl\LaravelExpoPushNotifications\Exceptions\ExpoException;
 use Sbkl\LaravelExpoPushNotifications\Exceptions\UnexpectedResponseException;
+use Sbkl\LaravelExpoPushNotifications\Models\Channel;
+use Sbkl\LaravelExpoPushNotifications\Models\Notification;
 
 class Expo
 {
     /**
-     * The Expo Api Url that will receive the requests
+     * The Expo Api Url that will receive the requests.
      */
     protected $end_point;
 
     /**
-     * cURL handler
+     * cURL handler.
      *
      * @var null|resource
      */
     private $ch = null;
 
     /**
-     * The registrar instance that manages the tokens
+     * The registrar instance that manages the tokens.
      *
      * @var ExpoRegistrar
      */
@@ -99,11 +99,11 @@ class Expo
             throw new ExpoException('Channels array must not be empty.');
         }
 
-        if (!isset($notification['title']) && !isset($notification['body'])) {
+        if (! isset($notification['title']) && ! isset($notification['body'])) {
             throw ExpoException::emptyNotification();
         }
 
-        if (isset($notification['model']) && !$notification['model'] instanceof Model) {
+        if (isset($notification['model']) && ! $notification['model'] instanceof Model) {
             throw ExpoException::wrongModelInstance();
         }
 
@@ -120,7 +120,6 @@ class Expo
         $response = [];
 
         Channel::whereIn('name', $channelNames)->whereHas('subscriptions')->chunk(1, function ($channels) use ($databaseNotification, $notification, $debug, &$response) {
-
             $postData = [];
 
             // Gets the expo tokens and recipients
@@ -130,7 +129,7 @@ class Expo
 
             $databaseNotification->fresh()->recipients()->attach(collect($recipientIds)->diff($existingRecipients));
 
-            if (!empty($tokens)) {
+            if (! empty($tokens)) {
                 foreach ($tokens as $token) {
                     $postData[] = $notification + ['to' => $token];
                 }
@@ -152,7 +151,7 @@ class Expo
     }
 
     /**
-     * Determines if the request we sent has failed completely
+     * Determines if the request we sent has failed completely.
      *
      * @param array $response
      * @param array $recipients
@@ -174,7 +173,7 @@ class Expo
     }
 
     /**
-     * Sets the request url and headers
+     * Sets the request url and headers.
      *
      * @throws ExpoException
      *
@@ -197,7 +196,7 @@ class Expo
     }
 
     /**
-     * Get the cURL resource
+     * Get the cURL resource.
      *
      * @throws ExpoException
      *
@@ -209,7 +208,7 @@ class Expo
         $this->ch = $this->ch ?? curl_init();
 
         // Throw exception if the cURL handle failed
-        if (!$this->ch) {
+        if (! $this->ch) {
             throw new ExpoException('Could not initialise cURL!');
         }
 
@@ -217,7 +216,7 @@ class Expo
     }
 
     /**
-     * Executes cURL and captures the response
+     * Executes cURL and captures the response.
      *
      * @param $ch
      *
@@ -229,12 +228,12 @@ class Expo
     {
         $response = [
             'body' => curl_exec($ch),
-            'status_code' => curl_getinfo($ch, CURLINFO_HTTP_CODE)
+            'status_code' => curl_getinfo($ch, CURLINFO_HTTP_CODE),
         ];
 
         $responseData = json_decode($response['body'], true)['data'] ?? null;
 
-        if (!is_array($responseData)) {
+        if (! is_array($responseData)) {
             throw new UnexpectedResponseException();
         }
 

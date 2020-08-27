@@ -2,8 +2,8 @@
 
 namespace Sbkl\LaravelExpoPushNotifications\Models;
 
-use Sbkl\LaravelExpoPushNotifications\Traits\Expoable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Sbkl\LaravelExpoPushNotifications\Traits\Expoable;
 
 class User extends Authenticatable
 {

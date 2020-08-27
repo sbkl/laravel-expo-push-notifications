@@ -2,9 +2,9 @@
 
 namespace Sbkl\LaravelExpoPushNotifications\Tests\Unit;
 
-use Sbkl\LaravelExpoPushNotifications\Models\User;
-use Sbkl\LaravelExpoPushNotifications\Models\Channel;
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
+use Sbkl\LaravelExpoPushNotifications\Models\Channel;
+use Sbkl\LaravelExpoPushNotifications\Models\User;
 use Sbkl\LaravelExpoPushNotifications\Tests\LaravelTestCase;
 
 class ChannelTest extends LaravelTestCase

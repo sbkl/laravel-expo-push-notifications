@@ -2,11 +2,11 @@
 
 namespace Sbkl\LaravelExpoPushNotifications\Tests\Unit;
 
-use Sbkl\LaravelExpoPushNotifications\Models\User;
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Sbkl\LaravelExpoPushNotifications\Facades\Expo;
 use Sbkl\LaravelExpoPushNotifications\Models\Channel;
-use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Sbkl\LaravelExpoPushNotifications\Models\Notification;
+use Sbkl\LaravelExpoPushNotifications\Models\User;
 use Sbkl\LaravelExpoPushNotifications\Tests\LaravelTestCase;
 
 class UserTest extends LaravelTestCase
@@ -113,7 +113,7 @@ class UserTest extends LaravelTestCase
             'title' => 'User test notifications 1',
             'body' => 'This is coming from the package 1',
             'data' => json_encode([
-                'someData' => 'goes here'
+                'someData' => 'goes here',
             ]),
         ];
 
@@ -123,7 +123,7 @@ class UserTest extends LaravelTestCase
             'title' => 'User test notifications 2',
             'body' => 'This is coming from the package 2',
             'data' => json_encode([
-                'someData' => 'goes here'
+                'someData' => 'goes here',
             ]),
         ];
 
@@ -163,7 +163,7 @@ class UserTest extends LaravelTestCase
             'title' => 'User test notifications 1',
             'body' => 'This is coming from the package 1',
             'data' => json_encode([
-                'someData' => 'goes here'
+                'someData' => 'goes here',
             ]),
         ];
 
@@ -171,7 +171,7 @@ class UserTest extends LaravelTestCase
             'title' => 'User test notifications 1',
             'body' => 'This is coming from the package 1',
             'data' => json_encode([
-                'someData' => 'goes here'
+                'someData' => 'goes here',
             ]),
         ];
 
