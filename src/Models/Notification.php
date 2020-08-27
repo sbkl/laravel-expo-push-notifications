@@ -49,7 +49,6 @@ class Notification extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-
     public function recipients()
     {
         return $this->belongsToMany(User::class, 'expo_notification_user', 'expo_notification_id', 'user_id')->withPivot('read_at')->withTimestamps();
@@ -60,7 +59,6 @@ class Notification extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
-
     public function model()
     {
         return $this->morphTo();
@@ -74,7 +72,7 @@ class Notification extends Model
     public function markAsRead($recipientId)
     {
         $this->recipients()->updateExistingPivot($recipientId, [
-            'read_at' => now()
+            'read_at' => now(),
         ]);
     }
 
@@ -86,7 +84,7 @@ class Notification extends Model
     public function markAsUnread($recipientId)
     {
         $this->recipients()->updateExistingPivot($recipientId, [
-            'read_at' => null
+            'read_at' => null,
         ]);
     }
 

@@ -7,7 +7,7 @@ use Sbkl\LaravelExpoPushNotifications\Models\Channel;
 interface ExpoRepository
 {
     /**
-     * Stores an Expo token with a given identifier
+     * Stores an Expo token with a given identifier.
      *
      * @param $key
      * @param $value
@@ -17,7 +17,7 @@ interface ExpoRepository
     public function store($user, $channel, $token);
 
     /**
-     * Retrieve an Expo token with a given identifier
+     * Retrieve an Expo token with a given identifier.
      *
      * @param string $key
      *
@@ -26,7 +26,7 @@ interface ExpoRepository
     public function retrieve(Channel $channel);
 
     /**
-     * Removes an Expo token with a given identifier
+     * Removes an Expo token with a given identifier.
      *
      * @param string $key
      * @param string $value

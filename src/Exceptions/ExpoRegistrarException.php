@@ -5,7 +5,7 @@ namespace Sbkl\LaravelExpoPushNotifications\Exceptions;
 class ExpoRegistrarException extends ExpoException
 {
     /**
-     * Invalid token exception
+     * Invalid token exception.
      *
      * @return static
      */
@@ -15,7 +15,7 @@ class ExpoRegistrarException extends ExpoException
     }
 
     /**
-     * Register token exception
+     * Register token exception.
      *
      * @return static
      */
@@ -25,7 +25,7 @@ class ExpoRegistrarException extends ExpoException
     }
 
     /**
-     * Empty interests exception
+     * Empty interests exception.
      *
      * @return static
      */
@@ -35,7 +35,7 @@ class ExpoRegistrarException extends ExpoException
     }
 
     /**
-     * Could not remove interest exception
+     * Could not remove interest exception.
      *
      * @return static
      */

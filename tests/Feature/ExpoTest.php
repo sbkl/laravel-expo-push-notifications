@@ -3,15 +3,14 @@
 namespace Sbkl\LaravelExpoPushNotifications\Tests\Feature;
 
 use Sbkl\LaravelExpoPushNotifications\Exceptions\ExpoException;
-use Sbkl\LaravelExpoPushNotifications\Models\User;
 use Sbkl\LaravelExpoPushNotifications\Facades\Expo;
 use Sbkl\LaravelExpoPushNotifications\Models\Channel;
 use Sbkl\LaravelExpoPushNotifications\Models\Notification;
+use Sbkl\LaravelExpoPushNotifications\Models\User;
 use Sbkl\LaravelExpoPushNotifications\Tests\LaravelTestCase;
 
 class ExpoTest extends LaravelTestCase
 {
-
     /** @test */
     public function it_can_create_a_channel()
     {
@@ -73,6 +72,7 @@ class ExpoTest extends LaravelTestCase
             'token' => $this->token,
         ]);
     }
+
     /** @test */
     public function a_notification_must_have_a_title_or_a_body()
     {
@@ -94,6 +94,7 @@ class ExpoTest extends LaravelTestCase
             $this->assertEquals('Sbkl\LaravelExpoPushNotifications\Exceptions\ExpoException', get_class($error));
         }
     }
+
     /** @test */
     public function it_can_create_recipients()
     {
@@ -115,7 +116,7 @@ class ExpoTest extends LaravelTestCase
             'title' => 'Laravel Push Notifications',
             'body' => 'This is coming from the package',
             'data' => json_encode([
-                'someData' => 'goes here'
+                'someData' => 'goes here',
             ]),
         ];
 
@@ -133,13 +134,13 @@ class ExpoTest extends LaravelTestCase
         $this->assertDatabaseHas('expo_notification_user', [
             'expo_notification_id' => $databaseNotification->id,
             'user_id' => (string) $user1->id,
-            'read_at' => null
+            'read_at' => null,
         ]);
 
         $this->assertDatabaseHas('expo_notification_user', [
             'expo_notification_id' => $databaseNotification->id,
             'user_id' => (string) $user1->id,
-            'read_at' => null
+            'read_at' => null,
         ]);
 
         $this->assertEquals('ok', $response[0]['status']);

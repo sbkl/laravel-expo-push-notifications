@@ -14,7 +14,7 @@ class Subscription extends Model
      * Get the notification entities that the users has.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */    
+     */
     public function channel()
     {
         return $this->belongsTo(Channel::class);
@@ -24,7 +24,7 @@ class Subscription extends Model
      * Get the notification entities that the users has.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */     
+     */
     public function subscriber()
     {
         return $this->belongsTo(User::class);

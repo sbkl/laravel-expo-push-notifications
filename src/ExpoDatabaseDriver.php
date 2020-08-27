@@ -2,7 +2,6 @@
 
 namespace Sbkl\LaravelExpoPushNotifications;
 
-use Sbkl\LaravelExpoPushNotifications\ExpoRepository;
 use Sbkl\LaravelExpoPushNotifications\Models\Channel;
 use Sbkl\LaravelExpoPushNotifications\Models\Subscription;
 
@@ -14,7 +13,7 @@ class ExpoDatabaseDriver implements ExpoRepository
             'user_id' => (string) $subscriber->id,
             'channel_id' => (string) $channel->id,
             'token' => $token,
-            'deactivated_at' => null
+            'deactivated_at' => null,
         ]);
     }
 
