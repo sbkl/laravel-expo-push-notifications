@@ -86,12 +86,10 @@ class ExpoTest extends LaravelTestCase
 
         Expo::subscribe($user, $channel, 'ExponentPushToken[1234567890000]');
 
-        $channels = Channel::whereIn('name', [$channelName])->whereHas('subscriptions')->get();
-
         $notification = [];
 
         try {
-            Expo::notify($channels, $notification);
+            Expo::notify(['Test'], $notification);
         } catch (ExpoException $error) {
             $this->assertEquals('Sbkl\LaravelExpoPushNotifications\Exceptions\ExpoException', get_class($error));
         }
@@ -113,8 +111,6 @@ class ExpoTest extends LaravelTestCase
 
         Expo::subscribe($user2, $channel, $this->token);
 
-        $channels = Channel::whereIn('name', [$channelName])->whereHas('subscriptions')->get();
-
         $notification = [
             'title' => 'Laravel Push Notifications',
             'body' => 'This is coming from the package',
@@ -123,7 +119,7 @@ class ExpoTest extends LaravelTestCase
             ]),
         ];
 
-        $response = Expo::notify($channels, $notification);
+        $response = Expo::notify([$channelName], $notification);
 
         $this->assertDatabaseHas('expo_notifications', [
             'type' => null,
@@ -164,14 +160,12 @@ class ExpoTest extends LaravelTestCase
 
         Expo::subscribe($user, $channel, $this->token);
 
-        $channels = Channel::whereIn('name', [$channelName])->whereHas('subscriptions')->get();
-
         $notification = [
             'title' => 'Laravel Push Notifications',
             'body' => 'This is coming from the package',
         ];
 
-        $response = Expo::notify($channels, $notification);
+        $response = Expo::notify([$channelName], $notification);
 
         $this->assertEquals('ok', $response[0]['status']);
     }
@@ -194,14 +188,12 @@ class ExpoTest extends LaravelTestCase
         // Expo::subscribe($user, $channel, $token);
         $user2->subscribe($channel, 'ExponentPushToken[123456789]');
 
-        $channels = Channel::whereIn('name', [$channelName])->whereHas('subscriptions')->get();
-
         $notification = [
             'title' => 'Laravel Push Notifications Multiple',
             'body' => 'This is coming from the package',
         ];
 
-        $response = Expo::notify($channels, $notification);
+        $response = Expo::notify([$channelName], $notification);
 
         $this->assertEquals('ok', $response[0]['status']);
 

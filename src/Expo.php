@@ -117,14 +117,18 @@ class Expo
             isset($notification['data']) ? ['data' => json_decode($notification['data'])] : [],
         ));
 
-        Channel::whereIn('name', $channelNames)->whereHas('subscriptions')->chunk(1, function ($channels) use ($databaseNotification, $notification, $debug) {
+        $response = [];
+
+        Channel::whereIn('name', $channelNames)->whereHas('subscriptions')->chunk(1, function ($channels) use ($databaseNotification, $notification, $debug, &$response) {
 
             $postData = [];
 
             // Gets the expo tokens and recipients
             [$tokens, $recipientIds] = $this->registrar->getInterests($channels);
 
-            $databaseNotification->recipients()->attach($recipientIds);
+            $existingRecipients = $databaseNotification->recipients()->whereIn('user_id', $recipientIds)->pluck('user_id');
+
+            $databaseNotification->recipients()->attach(collect($recipientIds)->diff($existingRecipients));
 
             if (!empty($tokens)) {
                 foreach ($tokens as $token) {
@@ -141,10 +145,10 @@ class Expo
                 if ($debug && $this->failedCompletely($response, $tokens)) {
                     throw ExpoException::failedCompletelyException($response);
                 }
-
-                return $response;
             }
         });
+
+        return $response;
     }
 
     /**

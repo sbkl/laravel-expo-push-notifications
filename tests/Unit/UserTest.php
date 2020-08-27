@@ -109,8 +109,6 @@ class UserTest extends LaravelTestCase
 
         $user->subscribe($channel2, $this->token);
 
-        $channels = Channel::whereIn('name', ['Channel1', 'Channel2'])->whereHas('subscriptions')->get();
-
         $notification1 = [
             'title' => 'User test notifications 1',
             'body' => 'This is coming from the package 1',
@@ -119,7 +117,7 @@ class UserTest extends LaravelTestCase
             ]),
         ];
 
-        Expo::notify($channels, $notification1);
+        Expo::notify(['Channel1', 'Channel2'], $notification1);
 
         $notification2 = [
             'title' => 'User test notifications 2',
@@ -129,7 +127,7 @@ class UserTest extends LaravelTestCase
             ]),
         ];
 
-        Expo::notify($channels, $notification2);
+        Expo::notify(['Channel1', 'Channel2'], $notification2);
 
         $notifications = Notification::all();
 
@@ -161,8 +159,6 @@ class UserTest extends LaravelTestCase
 
         $user2->subscribe($channel, 'ExponentPushToken[123456789]');
 
-        $channels = Channel::whereIn('name', ['Channel1'])->whereHas('subscriptions')->get();
-
         $notification1 = [
             'title' => 'User test notifications 1',
             'body' => 'This is coming from the package 1',
@@ -179,9 +175,9 @@ class UserTest extends LaravelTestCase
             ]),
         ];
 
-        Expo::notify($channels, $notification1);
+        Expo::notify(['Channel1'], $notification1);
 
-        Expo::notify($channels, $notification2);
+        Expo::notify(['Channel1'], $notification2);
 
         $databaseNotification = Notification::first();
 
